@@ -20,7 +20,7 @@ services:
         keep-file: "true"
         mode: "non-blocking"
     restart: unless-stopped
-    container_name: wabisabi-dummy
+    container_name: portfolio
     environment:
       - NODE_ENV=production
       - PORT=3000
