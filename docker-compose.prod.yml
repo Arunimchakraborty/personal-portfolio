@@ -1,0 +1,30 @@
+services:
+  portfolio:
+    build:
+      context: .
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portfolio.rule=HostRegexp(`^(?:www\\.)?arunimchakraborty.com$`)"
+      - "traefik.http.routers.portfolio.entrypoints=https"
+      - "traefik.http.routers.portfolio.tls=true"
+      - "traefik.http.services.portfolio.loadbalancer.server.port=3000"
+    logging:
+      driver: loki
+      options:
+        loki-url: https://${LOKI_USER}:${LOKI_PASSWORD}@loki.internal.wabisabitech.in/loki/api/v1/push
+        loki-retries: 2
+        loki-max-backoff: 800ms
+        loki-timeout: 1ms
+        keep-file: "true"
+        mode: "non-blocking"
+    restart: unless-stopped
+    container_name: wabisabi-dummy
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+networks:
+  proxy:
+    external: true
